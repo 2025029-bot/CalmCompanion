@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmCompanion | Student Emotional Support Hub</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+            background: linear-gradient(-45deg, #ffc4ec, #c4b5fd, #bfdbfe, #a7f3d0, #fde68a, #fbcfe8);
+            background-size: 600% 600%;
+            animation: gradientBG 12s ease infinite;
+        }
+
+        .font-title {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600; 
+            letter-spacing: 0.03em;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.7;
+            animation: floatBlob 10s infinite alternate;
+        }
+        .blob-1 { top: 5%; left: 5%; width: 250px; height: 250px; background: #ff9a9e; animation-delay: 0s; }
+        .blob-2 { bottom: 10%; right: 5%; width: 300px; height: 300px; background: #a18cd1; animation-delay: 2s; }
+        .blob-3 { top: 40%; left: 40%; width: 200px; height: 200px; background: #fad0c4; animation-delay: 4s; }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, -60px) scale(1.1); }
+        }
+
+        #app-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 25px 70px -10px rgba(100, 100, 255, 0.2);
+        }
+
+        .input-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .input-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+        .input-card:focus-within {
+            transform: translateY(-4px);
+            border-color: currentColor;
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            appearance: none;
+            width: 1.6rem;
+            height: 1.6rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            transition: 0.2s;
+            cursor: pointer;
+            background-color: white;
+        }
+        input[type="checkbox"] { border-radius: 8px; }
+        
+        input[type="radio"]::before, input[type="checkbox"]::before {
+            content: "";
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 0.2s transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: currentColor;
+        }
+        input[type="checkbox"]::before { border-radius: 4px; }
+        input[type="radio"]:checked, input[type="checkbox"]:checked { border-color: currentColor; }
+        input[type="radio"]:checked::before, input[type="checkbox"]:checked::before { transform: scale(1); }
+
+        .btn-pop {
+            transition: all 0.1s;
+            border-bottom-width: 6px;
+            filter: brightness(100%);
+        }
+        .btn-pop:hover { filter: brightness(110%); transform: translateY(-2px); }
+        .btn-pop:active { transform: translateY(4px); border-bottom-width: 2px; margin-top: 4px; filter: brightness(95%); }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        .floating-icon { animation: floatIcon 6s ease-in-out infinite; }
+        
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #7c3aed, #db2777);
+        }
+
+        /* Modal Styles */
+        #admin-modal {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob-1 rounded-full"></div>
+    <div class="blob blob-2 rounded-full"></div>
+    <div class="blob blob-3 rounded-full"></div>
+
+    <div id="app-container" class="p-6 md:p-12 rounded-[3rem] w-full max-w-3xl transition-all duration-500 relative z-10">
+
+        <!-- 1. Menu View -->
+        <section id="menu-view" class="transition-opacity duration-500 ease-in-out text-center relative">
+            <!-- Admin Button -->
+            <button id="adminBtn" class="absolute top-0 right-0 p-2 text-indigo-300 hover:text-indigo-600 transition" title="Admin Login">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </button>
+
+            <header class="mb-10">
+                <!-- Custom Round & Cute Cat SVG -->
+                <svg class="w-48 h-48 inline-block mb-4 floating-icon drop-shadow-xl cursor-default select-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left Ear (Brown) -->
+                    <path d="M50,60 Q30,10 85,45" fill="#8B4513" stroke="#8B4513" stroke-width="8" stroke-linejoin="round" />
+                    <!-- Right Ear (Black) -->
+                    <path d="M150,60 Q170,10 115,45" fill="#1F2937" stroke="#1F2937" stroke-width="8" stroke-linejoin="round" />
+
+                    <!-- Head (Round White Circle) -->
+                    <circle cx="100" cy="100" r="65" fill="#FFFFFF" />
+
+                    <!-- Left Patch (Brown Rounded Blob) -->
+                    <path d="M45,80 Q35,110 65,110 Q85,90 45,80" fill="#8B4513" opacity="0.9"/>
+                    <!-- Right Patch (Black Rounded Blob) -->
+                    <path d="M155,80 Q165,110 135,110 Q115,90 155,80" fill="#1F2937" opacity="0.9"/>
+
+                    <!-- Eyes (Slanted Ellipses - Cute) -->
+                    <ellipse cx="70" cy="100" rx="7" ry="10" fill="#1F2937" transform="rotate(-8 70 100)" />
+                    <ellipse cx="130" cy="100" rx="7" ry="10" fill="#1F2937" transform="rotate(8 130 100)" />
+                    
+                    <!-- Eye Sparkles (White dots for cuteness) -->
+                    <circle cx="72" cy="98" r="2" fill="white" />
+                    <circle cx="132" cy="98" r="2" fill="white" />
+
+                    <!-- Eyebrows (Soft Arcs) -->
+                    <path d="M60,85 Q70,80 80,85" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M120,85 Q130,80 140,85" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+                    <!-- Nose (Pink Rounded) -->
+                    <path d="M94,120 Q100,126 106,120 Q100,116 94,120" fill="#FFB6C1" />
+
+                    <!-- Mouth (Cute 'w' shape) -->
+                    <path d="M92,128 Q96,133 100,128 Q104,133 108,128" stroke="#1F2937" stroke-width="2" fill="none" stroke-linecap="round" />
+
+                    <!-- Whiskers (Curved) -->
+                    <path d="M40,110 Q25,115 15,105" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                    <path d="M40,120 Q25,125 15,125" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                    
+                    <path d="M160,110 Q175,115 185,105" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                    <path d="M160,120 Q175,125 185,125" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                </svg>
+
+                <h1 class="text-6xl md:text-7xl gradient-text mb-4 tracking-tight pb-2 font-title">
+                    CalmCompanion
+                </h1>
+                <p class="text-slate-600 text-2xl font-bold">
+                    Your colorful space to breathe & be heard. 🌈
+                </p>
+            </header>
+
+            <div class="flex flex-col items-center justify-center space-y-8">
+                <div class="bg-white/80 p-8 rounded-[2rem] border-2 border-white shadow-lg max-w-lg">
+                    <p class="text-indigo-900 text-xl font-medium leading-relaxed">
+                        Hey there! 👋 <br>
+                        Let's do a quick, colorful check-in.
+                        <br><span class="text-pink-500 font-bold">No judgment, just vibes. 💖</span>
+                    </p>
+                </div>
+
+                <button id="startButton" class="btn-pop px-12 py-5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-2xl font-bold rounded-2xl border-violet-700 shadow-xl w-full md:w-auto">
+                    Let's Go! 🚀
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. Questionnaire View -->
+        <section id="questions-view" class="hidden opacity-0 transition-opacity duration-500 ease-in-out">
+            <!-- (Questionnaire content remains unchanged) -->
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-indigo-900 font-title">Check-In</h2>
+                    <div class="flex items-center gap-3 mt-2">
+                         <span class="text-indigo-600 font-bold bg-indigo-100 px-3 py-1 rounded-lg text-sm border border-indigo-200">Step <span id="page-indicator">1</span>/7</span>
+                         <div class="h-4 w-32 bg-gray-200 rounded-full overflow-hidden border-2 border-white shadow-inner">
+                             <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 w-0 transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(232,121,249,0.5)]"></div>
+                         </div>
+                    </div>
+                </div>
+                <div class="hidden sm:block px-4 py-2 bg-white/70 text-indigo-500 rounded-xl text-xs font-bold uppercase tracking-wider border-2 border-white shadow-sm">Optional & Confidential 🔒</div>
+            </header>
+
+            <form id="supportForm" class="space-y-6">
+                <!-- STEP 1 -->
+                <div id="step-1" class="form-step space-y-6">
+                    <div class="input-card p-6 bg-blue-100/50 rounded-3xl text-blue-600">
+                        <label for="studentName" class="block text-xl font-bold text-blue-800 mb-3">1. What should we call you? ✏️</label>
+                        <input type="text" id="studentName" name="studentName" class="w-full p-4 text-lg border-2 border-transparent bg-white/80 rounded-2xl focus:border-blue-400 focus:outline-none text-slate-700 placeholder-blue-300 font-semibold transition-colors" placeholder="Name or nickname (Optional)...">
+                    </div>
+                    <div class="input-card p-6 bg-orange-100/50 rounded-3xl text-orange-500">
+                        <label class="block text-xl font-bold text-orange-800 mb-4">2. What's on your mind? 💭</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <label class="flex items-center p-3 bg-white/80 rounded-2xl cursor-pointer hover:bg-orange-200/50 transition border-2 border-transparent hover:border-orange-300"><input type="checkbox" name="troubles" value="Academic Stress"> <span class="ml-3 font-semibold text-slate-600">School Stress 📚</span></label>
+                            <label class="flex items-center p-3 bg-white/80 rounded-2xl cursor-pointer hover:bg-orange-200/50 transition border-2 border-transparent hover:border-orange-300"><input type="checkbox" name="troubles" value="Anxiety/Worry"> <span class="ml-3 font-semibold text-slate-600">Anxiety 🌪️</span></label>
+                            <label class="flex items-center p-3 bg-white/80 rounded-2xl cursor-pointer hover:bg-orange-200/50 transition border-2 border-transparent hover:border-orange-300"><input type="checkbox" name="troubles" value="Family Issues"> <span class="ml-3 font-semibold text-slate-600">Family 🏠</span></label>
+                            <label class="flex items-center p-3 bg-white/80 rounded-2xl cursor-pointer hover:bg-orange-200/50 transition border-2 border-transparent hover:border-orange-300"><input type="checkbox" name="troubles" value="Loneliness"> <span class="ml-3 font-semibold text-slate-600">Loneliness 🍃</span></label>
+                            <label class="flex items-center p-3 bg-white/80 rounded-2xl cursor-pointer hover:bg-orange-200/50 transition border-2 border-transparent hover:border-orange-300"><input type="checkbox" name="troubles" value="Feeling Down"> <span class="ml-3 font-semibold text-slate-600">Feeling Down 🌧️</span></label>
+                            <label class="flex items-center p-3 bg-white/80 rounded-2xl cursor-pointer hover:bg-orange-200/50 transition border-2 border-transparent hover:border-orange-300"><input type="checkbox" name="troubles" value="Other"> <span class="ml-3 font-semibold text-slate-600">Something else...</span></label>
+                        </div>
+                    </div>
+                    <div class="input-card p-6 bg-rose-100/50 rounded-3xl text-rose-500">
+                        <label for="dramaticEvents" class="block text-xl font-bold text-rose-800 mb-3">3. Any big changes recently? 📅</label>
+                        <select id="dramaticEvents" name="dramaticEvents" class="w-full p-4 text-lg border-r-[16px] border-transparent bg-white/80 rounded-2xl focus:ring-4 focus:ring-rose-200 outline-none cursor-pointer font-semibold text-slate-600">
+                            <option value="" disabled selected>Tap to choose...</option>
+                            <option value="None">No big changes</option>
+                            <option value="Minor Change">Small change</option>
+                            <option value="Moderate Stressor">Medium stress</option>
+                            <option value="Significant Loss">Big life change</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end pt-4"><button type="button" onclick="nextStep(1)" class="btn-pop px-8 py-3 bg-gradient-to-r from-blue-400 to-rose-400 text-white text-lg font-bold rounded-xl border-blue-600 shadow-lg">Next ➜</button></div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div id="step-2" class="form-step space-y-6 hidden">
+                    <div class="bg-emerald-100/60 p-6 rounded-3xl border-2 border-emerald-200 shadow-lg">
+                        <h3 class="text-2xl font-extrabold text-emerald-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">🌿</span> Daily Vibes</h3>
+                        <div class="mb-6 bg-white/60 p-4 rounded-2xl text-emerald-600">
+                            <label class="block text-lg font-bold text-emerald-800 mb-3">4a. How's your sleep? 😴</label>
+                            <select name="sleepPattern" class="w-full p-3 rounded-xl bg-white border-2 border-emerald-100 font-semibold text-slate-600 outline-none focus:border-emerald-400 transition">
+                                <option value="" disabled selected>Choose...</option>
+                                <option value="Normal">Good / Normal</option>
+                                <option value="Slightly disturbed">Meh / Okay</option>
+                                <option value="Very poor">Not great</option>
+                            </select>
+                        </div>
+                        <div class="mb-6 bg-white/60 p-4 rounded-2xl text-emerald-600">
+                            <label class="block text-lg font-bold text-emerald-800 mb-3">4b. Still enjoying your hobbies? 🎨</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 min-w-[120px] p-3 bg-white rounded-xl border-2 border-transparent hover:border-emerald-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="lostInterest" value="Yes"> <span class="ml-2 font-semibold text-slate-600">Lost interest</span></label>
+                                <label class="flex-1 min-w-[120px] p-3 bg-white rounded-xl border-2 border-transparent hover:border-emerald-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="lostInterest" value="A little"> <span class="ml-2 font-semibold text-slate-600">A little</span></label>
+                                <label class="flex-1 min-w-[120px] p-3 bg-white rounded-xl border-2 border-transparent hover:border-emerald-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="lostInterest" value="No"> <span class="ml-2 font-semibold text-slate-600">Nope, all good!</span></label>
+                            </div>
+                        </div>
+                        <div class="bg-white/60 p-4 rounded-2xl text-emerald-600">
+                            <label class="block text-lg font-bold text-emerald-800 mb-3">4c. Can you focus? 🧠</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 min-w-[120px] p-3 bg-white rounded-xl border-2 border-transparent hover:border-emerald-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="concentrationIssue" value="Yes"> <span class="ml-2 font-semibold text-slate-600">Hard to focus</span></label>
+                                <label class="flex-1 min-w-[120px] p-3 bg-white rounded-xl border-2 border-transparent hover:border-emerald-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="concentrationIssue" value="Sometimes"> <span class="ml-2 font-semibold text-slate-600">Sometimes</span></label>
+                                <label class="flex-1 min-w-[120px] p-3 bg-white rounded-xl border-2 border-transparent hover:border-emerald-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="concentrationIssue" value="No"> <span class="ml-2 font-semibold text-slate-600">Totally focused</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="prevStep(2)" class="px-6 py-3 text-emerald-600 font-bold hover:bg-emerald-50 rounded-xl transition">Back</button>
+                        <button type="button" onclick="nextStep(2)" class="btn-pop px-8 py-3 bg-gradient-to-r from-emerald-400 to-teal-400 text-white text-lg font-bold rounded-xl border-emerald-600 shadow-lg">Next ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div id="step-3" class="form-step space-y-6 hidden">
+                    <div class="bg-amber-100/60 p-6 rounded-3xl border-2 border-amber-200 shadow-lg">
+                        <h3 class="text-2xl font-extrabold text-amber-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">📚</span> Academic Workload</h3>
+                        <div class="mb-6 bg-white/60 p-4 rounded-2xl text-amber-600">
+                            <label class="block text-lg font-bold text-amber-800 mb-3">5a. How manageable is your daily homework?</label>
+                            <div class="flex flex-col gap-2">
+                                <label class="p-3 bg-white rounded-xl border-2 border-transparent hover:border-amber-300 cursor-pointer transition"><input type="radio" name="homeworkLoad" value="Manageable"> <span class="ml-2 font-semibold text-slate-600">Manageable</span></label>
+                                <label class="p-3 bg-white rounded-xl border-2 border-transparent hover:border-amber-300 cursor-pointer transition"><input type="radio" name="homeworkLoad" value="Heavy"> <span class="ml-2 font-semibold text-slate-600">Heavy, but I manage</span></label>
+                                <label class="p-3 bg-white rounded-xl border-2 border-transparent hover:border-amber-300 cursor-pointer transition"><input type="radio" name="homeworkLoad" value="Overwhelming"> <span class="ml-2 font-semibold text-slate-600">Overwhelming</span></label>
+                            </div>
+                        </div>
+                        <div class="bg-white/60 p-4 rounded-2xl text-amber-600">
+                            <label class="block text-lg font-bold text-amber-800 mb-3">5b. Do you find your classes too difficult?</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-amber-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="classDifficulty" value="No"> <span class="ml-2 font-semibold text-slate-600">No, it's okay</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-amber-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="classDifficulty" value="Some"> <span class="ml-2 font-semibold text-slate-600">Some of them</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-amber-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="classDifficulty" value="Yes"> <span class="ml-2 font-semibold text-slate-600">Yes, mostly</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="prevStep(3)" class="px-6 py-3 text-amber-600 font-bold hover:bg-amber-50 rounded-xl transition">Back</button>
+                        <button type="button" onclick="nextStep(3)" class="btn-pop px-8 py-3 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-lg font-bold rounded-xl border-amber-600 shadow-lg">Next ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4 -->
+                <div id="step-4" class="form-step space-y-6 hidden">
+                    <div class="bg-red-100/60 p-6 rounded-3xl border-2 border-red-200 shadow-lg">
+                        <h3 class="text-2xl font-extrabold text-red-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">📈</span> Pressure & Exams</h3>
+                        <div class="mb-6 bg-white/60 p-4 rounded-2xl text-red-500">
+                            <label class="block text-lg font-bold text-red-800 mb-3">6a. Do you feel pressure to get high grades?</label>
+                            <select name="gradePressure" class="w-full p-3 rounded-xl bg-white border-2 border-red-100 font-semibold text-slate-600 outline-none focus:border-red-400 transition">
+                                <option value="" disabled selected>Choose...</option>
+                                <option value="None">No, I'm chill</option>
+                                <option value="Internal">Yes, from myself</option>
+                                <option value="External">Yes, from parents/teachers</option>
+                                <option value="Both">Yes, from everyone</option>
+                            </select>
+                        </div>
+                        <div class="bg-white/60 p-4 rounded-2xl text-red-500">
+                            <label class="block text-lg font-bold text-red-800 mb-3">6b. How anxious do you get before exams?</label>
+                            <div class="flex flex-col gap-2">
+                                <label class="p-3 bg-white rounded-xl border-2 border-transparent hover:border-red-300 cursor-pointer transition"><input type="radio" name="examAnxiety" value="None"> <span class="ml-2 font-semibold text-slate-600">Not really anxious</span></label>
+                                <label class="p-3 bg-white rounded-xl border-2 border-transparent hover:border-red-300 cursor-pointer transition"><input type="radio" name="examAnxiety" value="Moderate"> <span class="ml-2 font-semibold text-slate-600">Moderately anxious</span></label>
+                                <label class="p-3 bg-white rounded-xl border-2 border-transparent hover:border-red-300 cursor-pointer transition"><input type="radio" name="examAnxiety" value="Severe"> <span class="ml-2 font-semibold text-slate-600">Severely anxious</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="prevStep(4)" class="px-6 py-3 text-red-500 font-bold hover:bg-red-50 rounded-xl transition">Back</button>
+                        <button type="button" onclick="nextStep(4)" class="btn-pop px-8 py-3 bg-gradient-to-r from-red-400 to-rose-400 text-white text-lg font-bold rounded-xl border-red-600 shadow-lg">Next ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 5 -->
+                <div id="step-5" class="form-step space-y-6 hidden">
+                    <div class="bg-sky-100/60 p-6 rounded-3xl border-2 border-sky-200 shadow-lg">
+                        <h3 class="text-2xl font-extrabold text-sky-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">🏫</span> School Environment</h3>
+                        <div class="mb-6 bg-white/60 p-4 rounded-2xl text-sky-500">
+                            <label class="block text-lg font-bold text-sky-800 mb-3">7a. Can you talk to your teachers if you're struggling?</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-sky-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="teacherSupport" value="Yes"> <span class="ml-2 font-semibold text-slate-600">Yes</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-sky-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="teacherSupport" value="Some"> <span class="ml-2 font-semibold text-slate-600">Some of them</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-sky-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="teacherSupport" value="No"> <span class="ml-2 font-semibold text-slate-600">No</span></label>
+                            </div>
+                        </div>
+                        <div class="bg-white/60 p-4 rounded-2xl text-sky-500">
+                            <label class="block text-lg font-bold text-sky-800 mb-3">7b. Do you feel comfortable asking questions in class?</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-sky-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="classComfort" value="Yes"> <span class="ml-2 font-semibold text-slate-600">Yes</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-sky-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="classComfort" value="Sometimes"> <span class="ml-2 font-semibold text-slate-600">Sometimes</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-sky-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="classComfort" value="No"> <span class="ml-2 font-semibold text-slate-600">No</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="prevStep(5)" class="px-6 py-3 text-sky-600 font-bold hover:bg-sky-50 rounded-xl transition">Back</button>
+                        <button type="button" onclick="nextStep(5)" class="btn-pop px-8 py-3 bg-gradient-to-r from-sky-400 to-blue-400 text-white text-lg font-bold rounded-xl border-sky-600 shadow-lg">Next ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 6 -->
+                <div id="step-6" class="form-step space-y-6 hidden">
+                    <div class="bg-lime-100/60 p-6 rounded-3xl border-2 border-lime-200 shadow-lg">
+                        <h3 class="text-2xl font-extrabold text-lime-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">🧘</span> School-Life Balance</h3>
+                        <div class="mb-6 bg-white/60 p-4 rounded-2xl text-lime-600">
+                            <label class="block text-lg font-bold text-lime-800 mb-3">8a. Do you have enough free time to relax?</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-lime-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="freeTime" value="Yes"> <span class="ml-2 font-semibold text-slate-600">Yes</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-lime-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="freeTime" value="Barely"> <span class="ml-2 font-semibold text-slate-600">Barely</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-lime-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="freeTime" value="No"> <span class="ml-2 font-semibold text-slate-600">No</span></label>
+                            </div>
+                        </div>
+                        <div class="bg-white/60 p-4 rounded-2xl text-lime-600">
+                            <label class="block text-lg font-bold text-lime-800 mb-3">8b. Does thinking about your future career stress you out?</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-lime-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="futureStress" value="Not really"> <span class="ml-2 font-semibold text-slate-600">Not really</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-lime-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="futureStress" value="A bit"> <span class="ml-2 font-semibold text-slate-600">A bit</span></label>
+                                <label class="flex-1 p-3 bg-white rounded-xl border-2 border-transparent hover:border-lime-300 cursor-pointer flex items-center justify-center transition"><input type="radio" name="futureStress" value="A lot"> <span class="ml-2 font-semibold text-slate-600">A lot</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="prevStep(6)" class="px-6 py-3 text-lime-600 font-bold hover:bg-lime-50 rounded-xl transition">Back</button>
+                        <button type="button" onclick="nextStep(6)" class="btn-pop px-8 py-3 bg-gradient-to-r from-lime-400 to-green-400 text-white text-lg font-bold rounded-xl border-lime-600 shadow-lg">Next ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 7 -->
+                <div id="step-7" class="form-step space-y-6 hidden">
+                    <div class="input-card p-6 bg-violet-100/50 rounded-3xl text-violet-500">
+                        <p class="text-xl font-bold text-violet-800 mb-3">9. Have you been bullied? 🚫</p>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex-1 p-3 bg-white rounded-2xl cursor-pointer hover:bg-violet-200/50 transition border-2 border-transparent hover:border-violet-300 text-center"><input type="radio" name="hasBeenBullied" value="Yes"> <span class="block mt-1 font-semibold text-slate-600">Yes</span></label>
+                            <label class="flex-1 p-3 bg-white rounded-2xl cursor-pointer hover:bg-violet-200/50 transition border-2 border-transparent hover:border-violet-300 text-center"><input type="radio" name="hasBeenBullied" value="No"> <span class="block mt-1 font-semibold text-slate-600">No</span></label>
+                            <label class="flex-1 p-3 bg-white rounded-2xl cursor-pointer hover:bg-violet-200/50 transition border-2 border-transparent hover:border-violet-300 text-center"><input type="radio" name="hasBeenBullied" value="Prefer Not To Say"> <span class="block mt-1 font-semibold text-slate-600">Prefer not to say</span></label>
+                        </div>
+                    </div>
+                    <div class="input-card p-6 bg-slate-100/50 rounded-3xl text-slate-500">
+                        <label class="block text-xl font-bold text-slate-700 mb-3">10. Email (Optional) 📧</label>
+                        <input type="email" name="studentEmail" class="w-full p-4 text-lg border-2 border-transparent bg-white rounded-2xl focus:border-slate-400 outline-none text-slate-600 font-semibold" placeholder="name@school.com">
+                    </div>
+                    <div class="input-card p-6 bg-pink-100/50 rounded-3xl text-pink-500">
+                        <label class="block text-xl font-bold text-pink-800 mb-3">11. How was this? 👍</label>
+                        <select name="satisfaction" class="w-full p-4 text-lg border-r-[16px] border-transparent bg-white rounded-2xl focus:ring-4 focus:ring-pink-200 outline-none cursor-pointer font-semibold text-slate-600">
+                            <option value="" disabled selected>Tap to choose...</option>
+                            <option value="Very Satisfied">Loved it!</option>
+                            <option value="Satisfied">It was good</option>
+                            <option value="Neutral">It was okay</option>
+                            <option value="Dissatisfied">Not great</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button type="button" onclick="prevStep(7)" class="px-6 py-3 text-pink-500 font-bold hover:bg-pink-50 rounded-xl transition">Back</button>
+                        <button type="submit" class="btn-pop px-10 py-3 bg-gradient-to-r from-violet-400 to-pink-400 text-white text-xl font-bold rounded-xl border-violet-600 shadow-lg w-auto">Send It! 💌</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- 3. Success View -->
+        <section id="success-view" class="hidden opacity-0 transition-opacity duration-500 ease-in-out text-center">
+            <div class="flex flex-col items-center justify-center h-full space-y-6">
+                <!-- Custom Round & Cute Cat SVG (Same as Menu) -->
+                <svg class="w-48 h-48 inline-block mb-4 floating-icon drop-shadow-xl cursor-default select-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left Ear (Brown) -->
+                    <path d="M50,60 Q30,10 85,45" fill="#8B4513" stroke="#8B4513" stroke-width="8" stroke-linejoin="round" />
+                    <!-- Right Ear (Black) -->
+                    <path d="M150,60 Q170,10 115,45" fill="#1F2937" stroke="#1F2937" stroke-width="8" stroke-linejoin="round" />
+
+                    <!-- Head (Round White Circle) -->
+                    <circle cx="100" cy="100" r="65" fill="#FFFFFF" />
+
+                    <!-- Left Patch (Brown Rounded Blob) -->
+                    <path d="M45,80 Q35,110 65,110 Q85,90 45,80" fill="#8B4513" opacity="0.9"/>
+                    <!-- Right Patch (Black Rounded Blob) -->
+                    <path d="M155,80 Q165,110 135,110 Q115,90 155,80" fill="#1F2937" opacity="0.9"/>
+
+                    <!-- Eyes (Slanted Ellipses - Cute) -->
+                    <ellipse cx="70" cy="100" rx="7" ry="10" fill="#1F2937" transform="rotate(-8 70 100)" />
+                    <ellipse cx="130" cy="100" rx="7" ry="10" fill="#1F2937" transform="rotate(8 130 100)" />
+                    
+                    <!-- Eye Sparkles (White dots for cuteness) -->
+                    <circle cx="72" cy="98" r="2" fill="white" />
+                    <circle cx="132" cy="98" r="2" fill="white" />
+
+                    <!-- Eyebrows (Soft Arcs) -->
+                    <path d="M60,85 Q70,80 80,85" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M120,85 Q130,80 140,85" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+                    <!-- Nose (Pink Rounded) -->
+                    <path d="M94,120 Q100,126 106,120 Q100,116 94,120" fill="#FFB6C1" />
+
+                    <!-- Mouth (Cute 'w' shape) -->
+                    <path d="M92,128 Q96,133 100,128 Q104,133 108,128" stroke="#1F2937" stroke-width="2" fill="none" stroke-linecap="round" />
+
+                    <!-- Whiskers (Curved) -->
+                    <path d="M40,110 Q25,115 15,105" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                    <path d="M40,120 Q25,125 15,125" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                    
+                    <path d="M160,110 Q175,115 185,105" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                    <path d="M160,120 Q175,125 185,125" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
+                </svg>
+
+                <h1 class="text-5xl md:text-6xl font-extrabold gradient-text mb-2 font-title">CalmCompanion</h1>
+                <div class="bg-white/80 p-8 rounded-[2.5rem] shadow-xl border-4 border-white backdrop-blur-md max-w-md w-full relative overflow-hidden">
+                    <div class="h-20 w-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                        <span class="text-4xl text-teal-600">✨</span>
+                    </div>
+                    <h2 class="text-3xl font-black text-teal-700 mb-2">You're Awesome!</h2>
+                    <div class="my-6">
+                        <div class="flex justify-between text-sm font-bold text-slate-400 mb-1 px-1">
+                            <span>Vibe Meter</span>
+                            <span id="score-label">Calculating...</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-6 border-2 border-white shadow-inner overflow-hidden relative">
+                             <div class="absolute inset-0 w-full h-full opacity-20" style="background-image: linear-gradient(to right, #000 1px, transparent 1px); background-size: 20px 100%;"></div>
+                             <div id="happiness-bar" class="h-full rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-2" style="width: 5%; background: linear-gradient(90deg, #f87171, #fbbf24, #34d399, #60a5fa);">
+                                 <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                             </div>
+                        </div>
+                        <p id="vibe-text" class="text-indigo-500 font-bold mt-2 text-sm">...</p>
+                    </div>
+                    <p id="success-text" class="text-lg text-slate-600 font-medium border-t border-slate-200 pt-4">Your feelings are safe with us. <br>Have a wonderful day! 🌟</p>
+                    <button id="restartButton" class="btn-pop mt-6 px-8 py-3 bg-gradient-to-r from-blue-400 to-indigo-500 text-white font-bold rounded-xl border-indigo-600 shadow-lg transition transform hover:scale-105">Back to Home 🏠</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Admin View (Passcode Modal & Dashboard) -->
+        <div id="admin-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+            <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border-4 border-indigo-100">
+                <h3 class="text-2xl font-bold text-indigo-900 mb-4">Admin Access 🔒</h3>
+                <p class="text-sm text-slate-500 mb-4">Enter passcode to view responses.</p>
+                <input type="password" id="passcodeInput" class="w-full p-3 border-2 border-indigo-200 rounded-xl mb-4 text-center text-lg focus:border-indigo-500 outline-none" placeholder="****">
+                <div class="flex justify-center gap-2">
+                    <button id="cancelAdmin" class="px-4 py-2 text-slate-500 font-bold hover:bg-slate-100 rounded-xl transition">Cancel</button>
+                    <button id="submitPasscode" class="px-6 py-2 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition shadow-md">Unlock</button>
+                </div>
+                <p id="passcodeError" class="text-red-500 text-sm mt-2 hidden">Incorrect passcode!</p>
+            </div>
+        </div>
+
+        <section id="admin-dashboard" class="hidden w-full h-full absolute inset-0 bg-white/95 z-40 p-8 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <header class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold text-indigo-900">Student Responses</h2>
+                    <button id="closeAdmin" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-300 transition">Close</button>
+                </header>
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-indigo-50 text-indigo-900">
+                            <tr>
+                                <th class="p-4 font-bold">Name</th>
+                                <th class="p-4 font-bold">Email</th>
+                                <th class="p-4 font-bold">Troubles</th>
+                                <th class="p-4 font-bold">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="responsesTableBody" class="divide-y divide-slate-100 text-slate-600">
+                            <!-- Rows will be injected here -->
+                        </tbody>
+                    </table>
+                    <div id="noDataMsg" class="p-8 text-center text-slate-400 hidden">No responses yet.</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // --- Firebase Setup ---
+        // Parse config safely
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default';
+
+        // --- Auth State Management ---
+        let isAuthReady = false;
+
+        // Initialize Auth
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication Error:", error);
+            }
+        };
+
+        // Listen for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                isAuthReady = true;
+                console.log("CalmCompanion connected.");
+            }
+        });
+
+        // Trigger auth init
+        initAuth();
+
+        // --- Confetti & Nav ---
+        window.fireConfetti = function() {
+            var count = 200;
+            var defaults = { origin: { y: 0.7 } };
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, { particleCount: Math.floor(count * particleRatio) }));
+            }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+
+        window.nextStep = function(currentStep) {
+            const currentDiv = document.getElementById(`step-${currentStep}`);
+            const nextDiv = document.getElementById(`step-${currentStep + 1}`);
+            const pageIndicator = document.getElementById('page-indicator');
+            const progressBar = document.getElementById('progress-bar');
+            
+            currentDiv.classList.add('hidden');
+            nextDiv.classList.remove('hidden');
+            pageIndicator.textContent = currentStep + 1;
+            
+            let percentage = ((currentStep + 1) / 7) * 100;
+            progressBar.style.width = percentage + "%";
+            document.getElementById('app-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.prevStep = function(currentStep) {
+            const currentDiv = document.getElementById(`step-${currentStep}`);
+            const prevDiv = document.getElementById(`step-${currentStep - 1}`);
+            const pageIndicator = document.getElementById('page-indicator');
+            const progressBar = document.getElementById('progress-bar');
+
+            currentDiv.classList.add('hidden');
+            prevDiv.classList.remove('hidden');
+            pageIndicator.textContent = currentStep - 1;
+
+            let percentage = ((currentStep - 1) / 7) * 100;
+            progressBar.style.width = percentage + "%";
+        }
+
+        // --- Main App Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const startBtn = document.getElementById('startButton');
+            const menu = document.getElementById('menu-view');
+            const questions = document.getElementById('questions-view');
+            const success = document.getElementById('success-view');
+            const form = document.getElementById('supportForm');
+            const successText = document.getElementById('success-text');
+            const happinessBar = document.getElementById('happiness-bar');
+            const scoreLabel = document.getElementById('score-label');
+            const vibeText = document.getElementById('vibe-text');
+            const restartButton = document.getElementById('restartButton');
+
+            // Admin Elements
+            const adminBtn = document.getElementById('adminBtn');
+            const adminModal = document.getElementById('admin-modal');
+            const passcodeInput = document.getElementById('passcodeInput');
+            const submitPasscode = document.getElementById('submitPasscode');
+            const cancelAdmin = document.getElementById('cancelAdmin');
+            const passcodeError = document.getElementById('passcodeError');
+            const adminDashboard = document.getElementById('admin-dashboard');
+            const closeAdmin = document.getElementById('closeAdmin');
+            const tableBody = document.getElementById('responsesTableBody');
+            const noDataMsg = document.getElementById('noDataMsg');
+
+            // --- Admin Logic ---
+            adminBtn.addEventListener('click', () => {
+                adminModal.classList.remove('hidden');
+                passcodeInput.value = '';
+                passcodeError.classList.add('hidden');
+                passcodeInput.focus();
+            });
+
+            cancelAdmin.addEventListener('click', () => {
+                adminModal.classList.add('hidden');
+            });
+
+            submitPasscode.addEventListener('click', async () => {
+                if (passcodeInput.value === '1234') {
+                    // Success!
+                    adminModal.classList.add('hidden');
+                    loadResponses();
+                    adminDashboard.classList.remove('hidden');
+                } else {
+                    passcodeError.classList.remove('hidden');
+                }
+            });
+
+            closeAdmin.addEventListener('click', () => {
+                adminDashboard.classList.add('hidden');
+            });
+
+            async function loadResponses() {
+                // Ensure auth is ready
+                if (!auth.currentUser) {
+                    tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-orange-500">Connecting to database... please try again in a moment.</td></tr>';
+                    return;
+                }
+                
+                tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
+                noDataMsg.classList.add('hidden');
+
+                try {
+                    const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'survey_responses');
+                    const snapshot = await getDocs(colRef);
+                    
+                    tableBody.innerHTML = ''; 
+
+                    if (snapshot.empty) {
+                        noDataMsg.classList.remove('hidden');
+                        return;
+                    }
+
+                    // Sort in memory (newest first)
+                    const docs = snapshot.docs.map(d => d.data()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                    docs.forEach(data => {
+                        const row = document.createElement('tr');
+                        row.className = "hover:bg-slate-50 transition";
+                        
+                        const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'N/A';
+                        const name = data.studentName || 'Anonymous';
+                        const email = data.studentEmail || '-';
+                        const troubleStr = Array.isArray(data.troubles) ? data.troubles.join(', ') : (data.troubles || '-');
+
+                        row.innerHTML = `
+                            <td class="p-4 font-semibold">${name}</td>
+                            <td class="p-4 text-sm text-indigo-600">${email}</td>
+                            <td class="p-4 text-sm">${troubleStr}</td>
+                            <td class="p-4 text-xs text-slate-400">${date}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                } catch (e) {
+                    console.error("Error loading responses:", e);
+                    // Explicit permission error handling for user feedback
+                    if (e.code === 'permission-denied') {
+                         tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-500">Access denied. Please refresh the page.</td></tr>';
+                    } else {
+                         tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-500">Error: ${e.message}</td></tr>`;
+                    }
+                }
+            }
+
+
+            // --- Flow Logic ---
+            startBtn.addEventListener('click', () => {
+                menu.classList.add('opacity-0');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                    questions.classList.remove('hidden');
+                    setTimeout(() => questions.classList.remove('opacity-0'), 50);
+                }, 500);
+            });
+
+            restartButton.addEventListener('click', () => {
+                success.classList.add('opacity-0');
+                setTimeout(() => {
+                    success.classList.add('hidden');
+                    form.reset();
+                    for(let i=1; i<=7; i++) {
+                        let el = document.getElementById(`step-${i}`);
+                        if(el) el.classList.add('hidden');
+                    }
+                    document.getElementById('step-1').classList.remove('hidden');
+                    document.getElementById('page-indicator').textContent = '1';
+                    document.getElementById('progress-bar').style.width = '14%';
+                    happinessBar.style.width = '5%';
+                    scoreLabel.innerText = "Calculating...";
+                    vibeText.innerText = "...";
+                    menu.classList.remove('hidden');
+                    setTimeout(() => menu.classList.remove('opacity-0'), 50);
+                }, 500);
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Get all troubles
+                const troubles = formData.getAll('troubles');
+                data.troubles = troubles; // Store array
+                data.timestamp = Date.now(); // Add timestamp
+
+                // --- Calculate Score ---
+                let score = 100;
+                if (troubles.length > 0) score -= (troubles.length * 3);
+                if (data.dramaticEvents === "Minor Change") score -= 3;
+                if (data.dramaticEvents === "Moderate Stressor") score -= 7;
+                if (data.dramaticEvents === "Significant Loss") score -= 15;
+                if (data.sleepPattern === "Slightly disturbed") score -= 5;
+                if (data.sleepPattern === "Very poor") score -= 10;
+                if (data.lostInterest === "A little") score -= 5;
+                if (data.lostInterest === "Yes") score -= 10;
+                if (data.concentrationIssue === "Sometimes") score -= 3;
+                if (data.concentrationIssue === "Yes") score -= 7;
+                if (data.homeworkLoad === "Heavy") score -= 5;
+                if (data.homeworkLoad === "Overwhelming") score -= 10;
+                if (data.classDifficulty === "Some") score -= 3;
+                if (data.classDifficulty === "Yes") score -= 7;
+                if (data.gradePressure === "Internal" || data.gradePressure === "External") score -= 5;
+                if (data.gradePressure === "Both") score -= 10;
+                if (data.examAnxiety === "Moderate") score -= 5;
+                if (data.examAnxiety === "Severe") score -= 10;
+                if (data.teacherSupport === "No") score -= 5;
+                if (data.classComfort === "No") score -= 5;
+                if (data.freeTime === "Barely") score -= 5;
+                if (data.freeTime === "No") score -= 10;
+                if (data.futureStress === "A bit") score -= 3;
+                if (data.futureStress === "A lot") score -= 7;
+                if (data.hasBeenBullied === "Yes") score -= 15;
+                if (score < 10) score = 10; if (score > 100) score = 100;
+
+                // --- Save to Firestore ---
+                if (auth.currentUser) {
+                    try {
+                        const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'survey_responses');
+                        await addDoc(colRef, data);
+                        console.log("Response saved!");
+                    } catch (err) {
+                        console.error("Error saving response:", err);
+                    }
+                }
+
+                // --- UI Transition ---
+                questions.classList.add('opacity-0');
+                setTimeout(() => {
+                    questions.classList.add('hidden');
+                    
+                    if (data.studentEmail) {
+                        successText.innerHTML = "Your feelings are safe with us.<br>We'll email you soon! 💌";
+                    } else {
+                        successText.innerHTML = "Your feelings are safe with us.<br>Have a wonderful day! 🌟";
+                    }
+
+                    success.classList.remove('hidden');
+                    setTimeout(() => {
+                        success.classList.remove('opacity-0');
+                        window.fireConfetti(); 
+
+                        setTimeout(() => {
+                            happinessBar.style.width = score + "%";
+                            let vibeMsg = "";
+                            if(score >= 80) { vibeMsg = "You're Glowing! ✨"; scoreLabel.innerText = "Radiant"; } 
+                            else if (score >= 50) { vibeMsg = "Doing Okay! 🌿"; scoreLabel.innerText = "Balanced"; } 
+                            else { vibeMsg = "Sending extra hugs 💙"; scoreLabel.innerText = "Needs TLC"; }
+                            vibeText.innerText = vibeMsg;
+                        }, 100);
+                    }, 50);
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
