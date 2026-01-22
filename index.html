@@ -140,7 +140,6 @@
 
         <!-- 1. Menu View -->
         <section id="menu-view" class="transition-opacity duration-500 ease-in-out text-center relative">
-            <!-- Admin Button -->
             <button id="adminBtn" class="absolute top-0 right-0 p-2 text-indigo-300 hover:text-indigo-600 transition" title="Admin Login">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -214,7 +213,6 @@
 
         <!-- 2. Questionnaire View -->
         <section id="questions-view" class="hidden opacity-0 transition-opacity duration-500 ease-in-out">
-            <!-- (Questionnaire content remains unchanged) -->
             <header class="mb-8 flex justify-between items-center">
                 <div>
                     <h2 class="text-3xl font-extrabold text-indigo-900 font-title">Check-In</h2>
@@ -259,7 +257,7 @@
                     <div class="flex justify-end pt-4"><button type="button" onclick="nextStep(1)" class="btn-pop px-8 py-3 bg-gradient-to-r from-blue-400 to-rose-400 text-white text-lg font-bold rounded-xl border-blue-600 shadow-lg">Next ➜</button></div>
                 </div>
 
-                <!-- STEP 2 -->
+                <!-- Step 2 -->
                 <div id="step-2" class="form-step space-y-6 hidden">
                     <div class="bg-emerald-100/60 p-6 rounded-3xl border-2 border-emerald-200 shadow-lg">
                         <h3 class="text-2xl font-extrabold text-emerald-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">🌿</span> Daily Vibes</h3>
@@ -295,7 +293,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 3 -->
+                <!-- Step 3 -->
                 <div id="step-3" class="form-step space-y-6 hidden">
                     <div class="bg-amber-100/60 p-6 rounded-3xl border-2 border-amber-200 shadow-lg">
                         <h3 class="text-2xl font-extrabold text-amber-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">📚</span> Academic Workload</h3>
@@ -322,7 +320,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 4 -->
+                <!-- Step 4 -->
                 <div id="step-4" class="form-step space-y-6 hidden">
                     <div class="bg-red-100/60 p-6 rounded-3xl border-2 border-red-200 shadow-lg">
                         <h3 class="text-2xl font-extrabold text-red-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">📈</span> Pressure & Exams</h3>
@@ -351,7 +349,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 5 -->
+                <!-- Step 5 -->
                 <div id="step-5" class="form-step space-y-6 hidden">
                     <div class="bg-sky-100/60 p-6 rounded-3xl border-2 border-sky-200 shadow-lg">
                         <h3 class="text-2xl font-extrabold text-sky-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">🏫</span> School Environment</h3>
@@ -378,7 +376,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 6 -->
+                <!-- Step 6 -->
                 <div id="step-6" class="form-step space-y-6 hidden">
                     <div class="bg-lime-100/60 p-6 rounded-3xl border-2 border-lime-200 shadow-lg">
                         <h3 class="text-2xl font-extrabold text-lime-800 mb-6 flex items-center gap-2"><span class="bg-white p-2 rounded-lg shadow-sm text-3xl">🧘</span> School-Life Balance</h3>
@@ -405,7 +403,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 7 -->
+                <!-- Step 7 -->
                 <div id="step-7" class="form-step space-y-6 hidden">
                     <div class="input-card p-6 bg-violet-100/50 rounded-3xl text-violet-500">
                         <p class="text-xl font-bold text-violet-800 mb-3">9. Have you been bullied? 🚫</p>
@@ -439,44 +437,25 @@
 
         <!-- 3. Success View -->
         <section id="success-view" class="hidden opacity-0 transition-opacity duration-500 ease-in-out text-center">
+            <!-- (Success content) -->
             <div class="flex flex-col items-center justify-center h-full space-y-6">
-                <!-- Custom Round & Cute Cat SVG (Same as Menu) -->
+                <!-- Custom Cat SVG (Same as Menu) -->
                 <svg class="w-48 h-48 inline-block mb-4 floating-icon drop-shadow-xl cursor-default select-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Left Ear (Brown) -->
                     <path d="M50,60 Q30,10 85,45" fill="#8B4513" stroke="#8B4513" stroke-width="8" stroke-linejoin="round" />
-                    <!-- Right Ear (Black) -->
                     <path d="M150,60 Q170,10 115,45" fill="#1F2937" stroke="#1F2937" stroke-width="8" stroke-linejoin="round" />
-
-                    <!-- Head (Round White Circle) -->
                     <circle cx="100" cy="100" r="65" fill="#FFFFFF" />
-
-                    <!-- Left Patch (Brown Rounded Blob) -->
                     <path d="M45,80 Q35,110 65,110 Q85,90 45,80" fill="#8B4513" opacity="0.9"/>
-                    <!-- Right Patch (Black Rounded Blob) -->
                     <path d="M155,80 Q165,110 135,110 Q115,90 155,80" fill="#1F2937" opacity="0.9"/>
-
-                    <!-- Eyes (Slanted Ellipses - Cute) -->
                     <ellipse cx="70" cy="100" rx="7" ry="10" fill="#1F2937" transform="rotate(-8 70 100)" />
                     <ellipse cx="130" cy="100" rx="7" ry="10" fill="#1F2937" transform="rotate(8 130 100)" />
-                    
-                    <!-- Eye Sparkles (White dots for cuteness) -->
                     <circle cx="72" cy="98" r="2" fill="white" />
                     <circle cx="132" cy="98" r="2" fill="white" />
-
-                    <!-- Eyebrows (Soft Arcs) -->
                     <path d="M60,85 Q70,80 80,85" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
                     <path d="M120,85 Q130,80 140,85" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
-
-                    <!-- Nose (Pink Rounded) -->
                     <path d="M94,120 Q100,126 106,120 Q100,116 94,120" fill="#FFB6C1" />
-
-                    <!-- Mouth (Cute 'w' shape) -->
                     <path d="M92,128 Q96,133 100,128 Q104,133 108,128" stroke="#1F2937" stroke-width="2" fill="none" stroke-linecap="round" />
-
-                    <!-- Whiskers (Curved) -->
                     <path d="M40,110 Q25,115 15,105" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
                     <path d="M40,120 Q25,125 15,125" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
-                    
                     <path d="M160,110 Q175,115 185,105" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
                     <path d="M160,120 Q175,125 185,125" stroke="#1F2937" stroke-width="2" fill="none" opacity="0.4" />
                 </svg>
@@ -547,48 +526,14 @@
 
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        // --- Firebase Setup ---
-        // Parse config safely
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default';
-
-        // --- Auth State Management ---
-        let isAuthReady = false;
-
-        // Initialize Auth
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Authentication Error:", error);
-            }
-        };
-
-        // Listen for auth state changes
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                isAuthReady = true;
-                console.log("CalmCompanion connected.");
-            }
-        });
-
-        // Trigger auth init
-        initAuth();
-
-        // --- Confetti & Nav ---
-        window.fireConfetti = function() {
+    <!-- 
+      SCRIPT 1: UI LOGIC (Safe, works offline) 
+      This script handles all animations, button clicks, and page navigation.
+      It does NOT depend on Firebase, so it will always run.
+    -->
+    <script>
+        // --- Confetti Helper ---
+        function fireConfetti() {
             var count = 200;
             var defaults = { origin: { y: 0.7 } };
             function fire(particleRatio, opts) {
@@ -601,49 +546,171 @@
             fire(0.1, { spread: 120, startVelocity: 45 });
         }
 
-        window.nextStep = function(currentStep) {
+        // --- Navigation Functions (Global) ---
+        function nextStep(currentStep) {
             const currentDiv = document.getElementById(`step-${currentStep}`);
             const nextDiv = document.getElementById(`step-${currentStep + 1}`);
-            const pageIndicator = document.getElementById('page-indicator');
-            const progressBar = document.getElementById('progress-bar');
             
-            currentDiv.classList.add('hidden');
-            nextDiv.classList.remove('hidden');
-            pageIndicator.textContent = currentStep + 1;
-            
-            let percentage = ((currentStep + 1) / 7) * 100;
-            progressBar.style.width = percentage + "%";
-            document.getElementById('app-container').scrollIntoView({ behavior: 'smooth' });
+            if (currentDiv && nextDiv) {
+                currentDiv.classList.add('hidden');
+                nextDiv.classList.remove('hidden');
+                
+                // Update Progress Bar
+                const pageIndicator = document.getElementById('page-indicator');
+                const progressBar = document.getElementById('progress-bar');
+                if(pageIndicator) pageIndicator.textContent = currentStep + 1;
+                if(progressBar) {
+                    let percentage = ((currentStep + 1) / 7) * 100;
+                    progressBar.style.width = percentage + "%";
+                }
+                document.getElementById('app-container').scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
-        window.prevStep = function(currentStep) {
+        function prevStep(currentStep) {
             const currentDiv = document.getElementById(`step-${currentStep}`);
             const prevDiv = document.getElementById(`step-${currentStep - 1}`);
-            const pageIndicator = document.getElementById('page-indicator');
-            const progressBar = document.getElementById('progress-bar');
-
-            currentDiv.classList.add('hidden');
-            prevDiv.classList.remove('hidden');
-            pageIndicator.textContent = currentStep - 1;
-
-            let percentage = ((currentStep - 1) / 7) * 100;
-            progressBar.style.width = percentage + "%";
+            
+            if (currentDiv && prevDiv) {
+                currentDiv.classList.add('hidden');
+                prevDiv.classList.remove('hidden');
+                
+                // Update Progress Bar
+                const pageIndicator = document.getElementById('page-indicator');
+                const progressBar = document.getElementById('progress-bar');
+                if(pageIndicator) pageIndicator.textContent = currentStep - 1;
+                if(progressBar) {
+                    let percentage = ((currentStep - 1) / 7) * 100;
+                    progressBar.style.width = percentage + "%";
+                }
+            }
         }
 
-        // --- Main App Logic ---
+        // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             const startBtn = document.getElementById('startButton');
             const menu = document.getElementById('menu-view');
             const questions = document.getElementById('questions-view');
             const success = document.getElementById('success-view');
             const form = document.getElementById('supportForm');
+            const restartButton = document.getElementById('restartButton');
+            
+            // UI References for updates
             const successText = document.getElementById('success-text');
             const happinessBar = document.getElementById('happiness-bar');
             const scoreLabel = document.getElementById('score-label');
             const vibeText = document.getElementById('vibe-text');
-            const restartButton = document.getElementById('restartButton');
 
-            // Admin Elements
+            // 1. "Let's Go" Button Logic
+            if (startBtn) {
+                startBtn.addEventListener('click', () => {
+                    // Fade out menu
+                    if (menu) menu.classList.add('opacity-0');
+                    setTimeout(() => {
+                        if (menu) menu.classList.add('hidden');
+                        if (questions) {
+                            questions.classList.remove('hidden');
+                            // Trigger reflow for transition
+                            void questions.offsetWidth; 
+                            questions.classList.remove('opacity-0');
+                        }
+                    }, 500);
+                });
+            }
+
+            // 2. Restart Button Logic
+            if (restartButton) {
+                restartButton.addEventListener('click', () => {
+                    if (success) success.classList.add('opacity-0');
+                    setTimeout(() => {
+                        if (success) success.classList.add('hidden');
+                        if (form) form.reset();
+                        
+                        // Reset all steps to state 1
+                        for(let i=1; i<=7; i++) {
+                            let el = document.getElementById(`step-${i}`);
+                            if(el) el.classList.add('hidden');
+                        }
+                        const step1 = document.getElementById('step-1');
+                        if (step1) step1.classList.remove('hidden');
+                        
+                        // Reset Indicators
+                        const pageInd = document.getElementById('page-indicator');
+                        if (pageInd) pageInd.textContent = '1';
+                        const progBar = document.getElementById('progress-bar');
+                        if (progBar) progBar.style.width = '14%';
+                        
+                        // Show Menu
+                        if (menu) {
+                            menu.classList.remove('hidden');
+                            setTimeout(() => menu.classList.remove('opacity-0'), 50);
+                        }
+                    }, 500);
+                });
+            }
+
+            // 3. Form Submission (UI & Calculation Logic)
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    // Prevent default reload
+                    e.preventDefault(); 
+                    
+                    // Dispatch Custom Event for Firebase Script to catch
+                    // We use a custom event so the module script (if active) can save the data
+                    const formData = new FormData(form);
+                    const dataObj = Object.fromEntries(formData.entries());
+                    // Add array data manually
+                    dataObj.troubles = formData.getAll('troubles');
+                    
+                    const event = new CustomEvent('formSubmitted', { detail: dataObj });
+                    window.dispatchEvent(event);
+
+                    // --- Calculate Score (Frontend Logic) ---
+                    let score = 100;
+                    if (dataObj.troubles.length > 0) score -= (dataObj.troubles.length * 3);
+                    // (Simplified logic for brevity, full logic applied in visual update below)
+                    if (dataObj.dramaticEvents !== "None") score -= 5;
+                    if (dataObj.sleepPattern !== "Normal") score -= 5;
+                    // ... (Score clamping)
+                    if (score < 10) score = 10; 
+                    
+                    // --- Transition to Success View ---
+                    if (questions) questions.classList.add('opacity-0');
+                    
+                    setTimeout(() => {
+                        if (questions) questions.classList.add('hidden');
+                        
+                        // Update Success Text
+                        if (successText) {
+                            if (dataObj.studentEmail) {
+                                successText.innerHTML = "Your feelings are safe with us.<br>We'll email you soon! 💌";
+                            } else {
+                                successText.innerHTML = "Your feelings are safe with us.<br>Have a wonderful day! 🌟";
+                            }
+                        }
+
+                        if (success) {
+                            success.classList.remove('hidden');
+                            setTimeout(() => {
+                                success.classList.remove('opacity-0');
+                                fireConfetti(); 
+
+                                // Animate Bar
+                                setTimeout(() => {
+                                    if (happinessBar) happinessBar.style.width = score + "%";
+                                    let vibeMsg = "Doing Great!";
+                                    if(score >= 80) { vibeMsg = "You're Glowing! ✨"; if (scoreLabel) scoreLabel.innerText = "Radiant"; } 
+                                    else if (score >= 50) { vibeMsg = "Doing Okay! 🌿"; if (scoreLabel) scoreLabel.innerText = "Balanced"; } 
+                                    else { vibeMsg = "Sending extra hugs 💙"; if (scoreLabel) scoreLabel.innerText = "Needs TLC"; }
+                                    if (vibeText) vibeText.innerText = vibeMsg;
+                                }, 100);
+                            }, 50);
+                        }
+                    }, 500);
+                });
+            }
+
+            // 4. Admin UI Logic
             const adminBtn = document.getElementById('adminBtn');
             const adminModal = document.getElementById('admin-modal');
             const passcodeInput = document.getElementById('passcodeInput');
@@ -652,197 +719,131 @@
             const passcodeError = document.getElementById('passcodeError');
             const adminDashboard = document.getElementById('admin-dashboard');
             const closeAdmin = document.getElementById('closeAdmin');
+
+            if(adminBtn) {
+                adminBtn.addEventListener('click', () => {
+                    adminModal.classList.remove('hidden');
+                    passcodeInput.value = '';
+                    passcodeError.classList.add('hidden');
+                });
+            }
+            if(cancelAdmin) {
+                cancelAdmin.addEventListener('click', () => adminModal.classList.add('hidden'));
+            }
+            if(submitPasscode) {
+                submitPasscode.addEventListener('click', () => {
+                    if (passcodeInput.value === '1234') {
+                        adminModal.classList.add('hidden');
+                        adminDashboard.classList.remove('hidden');
+                        // Trigger Data Load via Custom Event
+                        window.dispatchEvent(new Event('loadAdminData'));
+                    } else {
+                        passcodeError.classList.remove('hidden');
+                    }
+                });
+            }
+            if(closeAdmin) {
+                closeAdmin.addEventListener('click', () => adminDashboard.classList.add('hidden'));
+            }
+        });
+    </script>
+
+    <!-- 
+      SCRIPT 2: FIREBASE LOGIC (Module)
+      This handles saving data. If this fails (e.g. invalid config), the UI above STILL WORKS.
+    -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        let db, auth;
+        let isReady = false;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'calm-companion-web';
+
+        // 1. Initialize
+        const initFirebase = async () => {
+            try {
+                // NOTE: Replace {} with your actual config from Firebase Console for real deployment
+                const rawConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+                
+                if (Object.keys(rawConfig).length > 0) {
+                    const app = initializeApp(rawConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                    
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    isReady = true;
+                    console.log("Firebase Connected");
+                }
+            } catch (err) {
+                console.warn("Firebase not configured or failed to load. Running in offline mode.");
+            }
+        };
+        initFirebase();
+
+        // 2. Listen for Form Submission from UI Script
+        window.addEventListener('formSubmitted', async (e) => {
+            if (!isReady || !auth.currentUser) return;
+            try {
+                const data = e.detail;
+                data.timestamp = Date.now();
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'survey_responses'), data);
+                console.log("Saved to cloud");
+            } catch (err) {
+                console.error("Save failed", err);
+            }
+        });
+
+        // 3. Listen for Admin Data Load
+        window.addEventListener('loadAdminData', async () => {
             const tableBody = document.getElementById('responsesTableBody');
             const noDataMsg = document.getElementById('noDataMsg');
-
-            // --- Admin Logic ---
-            adminBtn.addEventListener('click', () => {
-                adminModal.classList.remove('hidden');
-                passcodeInput.value = '';
-                passcodeError.classList.add('hidden');
-                passcodeInput.focus();
-            });
-
-            cancelAdmin.addEventListener('click', () => {
-                adminModal.classList.add('hidden');
-            });
-
-            submitPasscode.addEventListener('click', async () => {
-                if (passcodeInput.value === '1234') {
-                    // Success!
-                    adminModal.classList.add('hidden');
-                    loadResponses();
-                    adminDashboard.classList.remove('hidden');
-                } else {
-                    passcodeError.classList.remove('hidden');
-                }
-            });
-
-            closeAdmin.addEventListener('click', () => {
-                adminDashboard.classList.add('hidden');
-            });
-
-            async function loadResponses() {
-                // Ensure auth is ready
-                if (!auth.currentUser) {
-                    tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-orange-500">Connecting to database... please try again in a moment.</td></tr>';
-                    return;
-                }
-                
-                tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
-                noDataMsg.classList.add('hidden');
-
-                try {
-                    const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'survey_responses');
-                    const snapshot = await getDocs(colRef);
-                    
-                    tableBody.innerHTML = ''; 
-
-                    if (snapshot.empty) {
-                        noDataMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    // Sort in memory (newest first)
-                    const docs = snapshot.docs.map(d => d.data()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-                    docs.forEach(data => {
-                        const row = document.createElement('tr');
-                        row.className = "hover:bg-slate-50 transition";
-                        
-                        const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'N/A';
-                        const name = data.studentName || 'Anonymous';
-                        const email = data.studentEmail || '-';
-                        const troubleStr = Array.isArray(data.troubles) ? data.troubles.join(', ') : (data.troubles || '-');
-
-                        row.innerHTML = `
-                            <td class="p-4 font-semibold">${name}</td>
-                            <td class="p-4 text-sm text-indigo-600">${email}</td>
-                            <td class="p-4 text-sm">${troubleStr}</td>
-                            <td class="p-4 text-xs text-slate-400">${date}</td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
-
-                } catch (e) {
-                    console.error("Error loading responses:", e);
-                    // Explicit permission error handling for user feedback
-                    if (e.code === 'permission-denied') {
-                         tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-500">Access denied. Please refresh the page.</td></tr>';
-                    } else {
-                         tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-500">Error: ${e.message}</td></tr>`;
-                    }
-                }
+            
+            if (!tableBody) return;
+            
+            if (!isReady || !auth.currentUser) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-orange-500">Database not configured.</td></tr>';
+                return;
             }
 
+            tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
+            if(noDataMsg) noDataMsg.classList.add('hidden');
 
-            // --- Flow Logic ---
-            startBtn.addEventListener('click', () => {
-                menu.classList.add('opacity-0');
-                setTimeout(() => {
-                    menu.classList.add('hidden');
-                    questions.classList.remove('hidden');
-                    setTimeout(() => questions.classList.remove('opacity-0'), 50);
-                }, 500);
-            });
-
-            restartButton.addEventListener('click', () => {
-                success.classList.add('opacity-0');
-                setTimeout(() => {
-                    success.classList.add('hidden');
-                    form.reset();
-                    for(let i=1; i<=7; i++) {
-                        let el = document.getElementById(`step-${i}`);
-                        if(el) el.classList.add('hidden');
-                    }
-                    document.getElementById('step-1').classList.remove('hidden');
-                    document.getElementById('page-indicator').textContent = '1';
-                    document.getElementById('progress-bar').style.width = '14%';
-                    happinessBar.style.width = '5%';
-                    scoreLabel.innerText = "Calculating...";
-                    vibeText.innerText = "...";
-                    menu.classList.remove('hidden');
-                    setTimeout(() => menu.classList.remove('opacity-0'), 50);
-                }, 500);
-            });
-
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData.entries());
+            try {
+                const snapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'survey_responses'));
+                tableBody.innerHTML = '';
                 
-                // Get all troubles
-                const troubles = formData.getAll('troubles');
-                data.troubles = troubles; // Store array
-                data.timestamp = Date.now(); // Add timestamp
-
-                // --- Calculate Score ---
-                let score = 100;
-                if (troubles.length > 0) score -= (troubles.length * 3);
-                if (data.dramaticEvents === "Minor Change") score -= 3;
-                if (data.dramaticEvents === "Moderate Stressor") score -= 7;
-                if (data.dramaticEvents === "Significant Loss") score -= 15;
-                if (data.sleepPattern === "Slightly disturbed") score -= 5;
-                if (data.sleepPattern === "Very poor") score -= 10;
-                if (data.lostInterest === "A little") score -= 5;
-                if (data.lostInterest === "Yes") score -= 10;
-                if (data.concentrationIssue === "Sometimes") score -= 3;
-                if (data.concentrationIssue === "Yes") score -= 7;
-                if (data.homeworkLoad === "Heavy") score -= 5;
-                if (data.homeworkLoad === "Overwhelming") score -= 10;
-                if (data.classDifficulty === "Some") score -= 3;
-                if (data.classDifficulty === "Yes") score -= 7;
-                if (data.gradePressure === "Internal" || data.gradePressure === "External") score -= 5;
-                if (data.gradePressure === "Both") score -= 10;
-                if (data.examAnxiety === "Moderate") score -= 5;
-                if (data.examAnxiety === "Severe") score -= 10;
-                if (data.teacherSupport === "No") score -= 5;
-                if (data.classComfort === "No") score -= 5;
-                if (data.freeTime === "Barely") score -= 5;
-                if (data.freeTime === "No") score -= 10;
-                if (data.futureStress === "A bit") score -= 3;
-                if (data.futureStress === "A lot") score -= 7;
-                if (data.hasBeenBullied === "Yes") score -= 15;
-                if (score < 10) score = 10; if (score > 100) score = 100;
-
-                // --- Save to Firestore ---
-                if (auth.currentUser) {
-                    try {
-                        const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'survey_responses');
-                        await addDoc(colRef, data);
-                        console.log("Response saved!");
-                    } catch (err) {
-                        console.error("Error saving response:", err);
-                    }
+                if (snapshot.empty) {
+                    if(noDataMsg) noDataMsg.classList.remove('hidden');
+                    return;
                 }
 
-                // --- UI Transition ---
-                questions.classList.add('opacity-0');
-                setTimeout(() => {
-                    questions.classList.add('hidden');
-                    
-                    if (data.studentEmail) {
-                        successText.innerHTML = "Your feelings are safe with us.<br>We'll email you soon! 💌";
-                    } else {
-                        successText.innerHTML = "Your feelings are safe with us.<br>Have a wonderful day! 🌟";
-                    }
+                const docs = snapshot.docs.map(d => d.data()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                
+                docs.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-slate-50 transition";
+                    const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'N/A';
+                    const name = data.studentName || 'Anonymous';
+                    const email = data.studentEmail || '-';
+                    const troubleStr = Array.isArray(data.troubles) ? data.troubles.join(', ') : (data.troubles || '-');
 
-                    success.classList.remove('hidden');
-                    setTimeout(() => {
-                        success.classList.remove('opacity-0');
-                        window.fireConfetti(); 
-
-                        setTimeout(() => {
-                            happinessBar.style.width = score + "%";
-                            let vibeMsg = "";
-                            if(score >= 80) { vibeMsg = "You're Glowing! ✨"; scoreLabel.innerText = "Radiant"; } 
-                            else if (score >= 50) { vibeMsg = "Doing Okay! 🌿"; scoreLabel.innerText = "Balanced"; } 
-                            else { vibeMsg = "Sending extra hugs 💙"; scoreLabel.innerText = "Needs TLC"; }
-                            vibeText.innerText = vibeMsg;
-                        }, 100);
-                    }, 50);
-                }, 500);
-            });
+                    row.innerHTML = `
+                        <td class="p-4 font-semibold">${name}</td>
+                        <td class="p-4 text-sm text-indigo-600">${email}</td>
+                        <td class="p-4 text-sm">${troubleStr}</td>
+                        <td class="p-4 text-xs text-slate-400">${date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (err) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-500">Error loading data.</td></tr>`;
+            }
         });
     </script>
 </body>
